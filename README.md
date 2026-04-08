@@ -2,39 +2,19 @@
 
 ## Overview
 
-This project implements a **course-feasible simplification** of the original proposal:
+This repository implements a two-stage recommendation system for Amazon beauty products.
 
 1. **Stage 1: Multimodal item representation**
    - Text embeddings from `all-MiniLM-L6-v2`
    - Image embeddings from `CLIP ViT-L/14`
-2. **Stage 2: Graph-based recommendation**
+2. **Stage 2: Graph-based retrieval**
    - LightGCN over the user-item interaction graph
    - Item-item relations such as `also_bought`
-3. **Stage 3: LLM-enhanced reranking**
+3. **Stage 3: Profile-based reranking**
    - A local Qwen2.5-14B user-preference profiler
-   - Candidate reranking using base score + history similarity + LLM profile similarity + relation/meta overlap
+   - Candidate reranking using base score, history similarity, relation overlap, metadata consistency, and optional LLM profile similarity
 
-This is the key simplification from the proposal PDF:
-
-- **Proposal idea that is too heavy**: project graph-enhanced embeddings directly into LLM token space and perform LoRA-based end-to-end reasoning.
-- **Implemented design**: keep multimodal graph retrieval as the main recommender, then use the LLM to generate a concise user preference profile for **stage-3 reranking**.
-
-This preserves the project title direction, keeps the system genuinely **LLM-enhanced**, and is much more realistic for a course project deliverable.
-
-## Why This Matches the Course Spec
-
-The course PDF requires:
-
-- a **deep learning** solution
-- at least **three data types**
-- baselines, results, ablations, and reproducible code
-
-This implementation uses:
-
-- **Ratings / interactions**
-- **Text**
-- **Image**
-- **Network / graph relations**
+The retrieval backbone learns user and item embeddings from interaction structure and multimodal item features. The reranker then refines the top candidates with finer-grained semantic and relation-aware signals.
 
 ## Current Pipeline
 
@@ -42,8 +22,8 @@ This implementation uses:
 
 - Checkpoint: `outputs/checkpoints/final_main.pt`
 - Config: `configs/default.yaml`
-- Validation retrieval-only: `HR@10 = 0.78542`, `NDCG@10 = 0.56204`
-- Test: `HR@10 = 0.84825`, `NDCG@10 = 0.63746`
+- Test retrieval-only with the final backbone: `HR@10 = 0.79253`, `NDCG@10 = 0.56435`
+- Test end-to-end with reranking: `HR@10 = 0.84825`, `NDCG@10 = 0.63746`
 
 The strongest end-to-end setup now combines:
 
@@ -171,4 +151,4 @@ python -m src.trainer --config configs/default.yaml --no_rerank
 
 - The previously generated image features were not reliable because local product images were missing. The current pipeline fixes this by downloading or directly reading image URLs.
 - The current image branch uses three stabilization steps: semantic alignment from CLIP image space into the text space, confidence-weighted visual injection, and a light text-image alignment regularizer during training.
-- The LLM stage is intentionally placed in **reranking**, not inside the retrieval backbone. This is the practical simplification that makes the project implementable while remaining faithful to the title.
+- The LLM stage is used in **reranking**, where it summarizes user preferences and contributes semantic profile signals without changing the retrieval backbone.
