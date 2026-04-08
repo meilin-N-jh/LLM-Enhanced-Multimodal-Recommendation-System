@@ -15,6 +15,7 @@ ppt-master/
 outputs/checkpoints/
 outputs/features/
 outputs/llm_profiles/
+outputs/proposal_pages/
 outputs/*.pt
 
 report/*.aux
