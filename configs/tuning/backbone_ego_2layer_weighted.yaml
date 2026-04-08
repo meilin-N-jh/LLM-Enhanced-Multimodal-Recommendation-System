@@ -1,0 +1,80 @@
+data:
+  data_dir: "data/processed/all_beauty"
+  output_dir: "outputs"
+  features_dir: "outputs/features"
+  image_dir: "data/processed/all_beauty/images"
+
+ablation:
+  no_image: false
+  no_text: false
+  no_relation: false
+  no_rerank: false
+
+model:
+  embedding_dim: 64
+  lightgcn_layers: 2
+  include_ego_embeddings: true
+  learnable_layer_weights: true
+  text_encoder_model: "sentence-transformers/all-MiniLM-L6-v2"
+  image_encoder_model: "openai/clip-vit-base-patch32"
+  fusion_hidden_dim: 128
+  text_item_scale: 0.20
+  image_item_scale: 0.00
+  fused_item_scale: 0.15
+  relation_scale: 0.20
+  align_loss_weight: 0.04
+  bridge_loss_weight: 0.01
+  user_text_scale: 0.00
+  user_image_scale: 0.00
+
+training:
+  seed: 42
+  epochs: 150
+  batch_size: 512
+  learning_rate: 0.0008
+  weight_decay: 0.0001
+  negatives_per_positive: 1
+  negative_sampling_strategy: "uniform"
+  hard_negative_ratio: 0.0
+  popular_negative_ratio: 0.0
+  popularity_alpha: 1.0
+  refresh_negatives_each_epoch: true
+  grad_clip_norm: 5.0
+  early_stopping_patience: 10
+  eval_interval: 5
+
+split:
+  strategy: "leave_one_out"
+  test_ratio: 0.2
+  val_ratio: 0.1
+
+evaluation:
+  k_values: [5, 10, 20]
+  top_n: 20
+
+reranking:
+  mode: "profile"
+  candidate_pool_size: 800
+  profile_based:
+    w_base: 0.00011533017095644027
+    w_history_text: 0.014231950975954533
+    w_history_image: 0.03343382105231285
+    w_llm_profile: 0.00011533017095644027
+    w_relation: 0.871482253074646
+    w_metadata: 0.08062134683132172
+  llm_profile:
+    enabled: false
+    model_path: "models/Qwen2.5-14B-Instruct"
+    cache_path: "outputs/llm_profiles/all_beauty_profiles.json"
+    max_history_items: 5
+    max_new_tokens: 96
+  rule_based:
+    w1_recall: 0.5
+    w2_text_sim: 0.3
+    w3_relation: 0.2
+
+device: "cuda"
+
+checkpoint:
+  save_interval: 10
+  save_best: true

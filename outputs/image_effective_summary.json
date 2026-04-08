@@ -1,0 +1,39 @@
+{
+  "checkpoint": "outputs/checkpoints/image_active_weighted_a.pt",
+  "config": "configs/tuning/image_active_weighted_a.yaml",
+  "description": "Image-active weighted LightGCN variant with direct image injection, user image profiles, and confidence-aware image scaling.",
+  "with_image": {
+    "hr@5": 0.8055720213396562,
+    "ndcg@5": 0.6241873676234584,
+    "hr@10": 0.8467694131594546,
+    "ndcg@10": 0.6375780108780827,
+    "hr@20": 0.8660343805572022,
+    "ndcg@20": 0.6425569393620468
+  },
+  "matched_no_image": {
+    "checkpoint": "outputs/checkpoints/image_active_weighted_a_no_image.pt",
+    "hr@5": 0.8046828689982217,
+    "ndcg@5": 0.6203147078964351,
+    "hr@10": 0.8473621813870776,
+    "ndcg@10": 0.6343076665323609,
+    "hr@20": 0.8660343805572022,
+    "ndcg@20": 0.6391600834803548
+  },
+  "image_effect": {
+    "delta_hr@5": 0.0008891523414345,
+    "delta_ndcg@5": 0.0038726597270233,
+    "delta_hr@10": -0.0005927682276230,
+    "delta_ndcg@10": 0.0032703443457218,
+    "delta_hr@20": 0.0,
+    "delta_ndcg@20": 0.0033968558816920
+  },
+  "learned_parameters": {
+    "image_gate": -0.45543089509010315,
+    "user_image_gate": -0.15655386447906494,
+    "layer_logits": [
+      -0.015206201933324337,
+      0.017679888755083084,
+      0.00770809780806303
+    ]
+  }
+}

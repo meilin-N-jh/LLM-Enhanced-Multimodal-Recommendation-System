@@ -1,0 +1,24 @@
+{
+  "config": "configs/default.yaml",
+  "python_exec": "/opt/anaconda3/envs/g41_project/bin/python",
+  "baselines": {},
+  "main_model": {
+    "checkpoint": "outputs/checkpoints/final_main.pt",
+    "metrics": {
+      "hr@5": 0.8058684054534677,
+      "ndcg@5": 0.6236843040204122,
+      "recall@5": 0.8058684054534677,
+      "precision@5": 0.16117368109069352,
+      "hr@10": 0.8482513337285121,
+      "ndcg@10": 0.6374648497203426,
+      "recall@10": 0.8482513337285121,
+      "precision@10": 0.0848251333728512,
+      "hr@20": 0.8678126852400712,
+      "ndcg@20": 0.6425427484332263,
+      "recall@20": 0.8678126852400712,
+      "precision@20": 0.04339063426200355
+    }
+  },
+  "ablations": {},
+  "inference_demo": {}
+}

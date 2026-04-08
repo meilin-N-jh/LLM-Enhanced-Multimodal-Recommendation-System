@@ -1,0 +1,58 @@
+# Data sources configuration for Amazon Reviews 2023 - All_Beauty
+
+# Category
+category: "All_Beauty"
+
+# Source URLs (official Amazon Reviews 2023)
+sources:
+  metadata:
+    url: "https://datarepo.eng.ucsd.edu/mcauley-group/data/amazon_2023/meta/meta_All_Beauty.jsonl.gz"
+    filename: "meta_All_Beauty.jsonl.gz"
+    expected_size: 213000000  # ~203MB
+
+  reviews:
+    url: "https://datarepo.eng.ucsd.edu/mcauley-group/data/amazon_2023/raw/review_categories/All_Beauty.jsonl.gz"
+    filename: "All_Beauty.jsonl.gz"
+    expected_size: 327000000  # ~312MB
+
+# Local paths
+paths:
+  # Raw data (already downloaded)
+  raw_source: "/home/g41/project/data/amazon_2023/raw"
+
+  # Target directories
+  raw_dir: "data/raw/all_beauty"
+  processed_dir: "data/processed/all_beauty"
+
+# Processing options
+processing:
+  # Sampling (set to None to use all data)
+  max_items: 100000      # None = use all items
+  max_users: 50000       # None = use all users
+  max_interactions: 1000000  # 需要更多交互才能筛选出足够多高频用户
+
+  # Minimum interactions per user (需要>=3才能做leave-one-out切分)
+  min_interactions_per_user: 3
+  min_item_interactions: 1  # 商品最少被交互1次
+
+  # Rating threshold for positive label
+  positive_rating_threshold: 4
+
+  # Only use verified purchases
+  verified_purchases_only: true
+
+# Split options
+splits:
+  strategy: "time_based"  # time_based or random
+  test_ratio: 0.2
+  val_ratio: 0.1
+
+# Image download options
+images:
+  enabled: false  # Set to true to download images
+  limit: 10000    # Max images to download (None = all)
+  timeout: 10     # Timeout per image in seconds
+  batch_size: 100 # Images per batch
+
+# Random seed for reproducibility
+seed: 42
